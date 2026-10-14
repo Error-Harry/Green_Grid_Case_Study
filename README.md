@@ -205,42 +205,6 @@ The dashboard definition is exported in `Green Grid Daily Usage.lvdash.json`.
 
 ---
 
-## 🚀 How to Run
-
-1. Upload the three files from `Dataset/` to the Unity Catalog Volume `/Volumes/databricksbootcamp/greeengridcasestudy/greeengridcasestudyvolume`
-2. Import the four notebooks into your Databricks workspace
-3. Run them in order (`01` → `02` and `03` → `04`), or create a Job with the dependency graph shown above
-4. Open the dashboard and point its datasets at `gold_daily_usage`
-
-> Catalog, schema and volume names are spelled exactly as they appear in the notebooks (`greeengridcasestudy`). Each notebook accepts an optional `run_id` widget for lineage.
-
----
-
-## 📁 Project Structure
-
-```
-green_grid_case_study/
-├── Bronze/
-│   └── 01_bronze_ingest.ipynb       # Raw ingestion
-├── Silver/
-│   ├── 02_silver_smartbill.ipynb    # Validation, billing, SHA-256
-│   └── 03_silver_quarantine.ipynb   # Rejected readings
-├── Gold/
-│   └── 04_gold_daily_usage.ipynb    # Per-meter aggregates
-├── Dataset/
-│   ├── meter_readings.json
-│   ├── customer_pii.csv
-│   └── pricing_plans.csv
-├── Images/
-│   ├── green_grid_dashboard.png
-│   └── job_execution.png
-├── Green Grid Daily Usage.lvdash.json   # Dashboard definition
-├── Green_Grid_Case_Study.pdf            # Original case study brief
-└── README.md
-```
-
----
-
 ## 🔧 Implementation Highlights
 
 ### Quality Firewall Before Billing
@@ -275,18 +239,6 @@ df_silver.withColumn("period", when(is_peak, "peak").otherwise("offpeak"))
 4. **Business-rule implementation** (Time-of-Use pricing) in PySpark
 5. **Job orchestration** with task dependencies and parallel branches
 6. **AI/BI dashboards** built on a governed Gold table
-
----
-
-## 🔮 Known Limitations & Future Enhancements
-
-- **Peak window boundary**: The spec defines peak as 18:00 up to (not including) 21:00; the notebooks currently use `Hour <= 21`. The dataset has no readings in hour 21, so results are unaffected, but the condition should be `Hour < 21`
-- **Daily granularity in Gold**: Gold aggregates per meter for the whole month. Grouping by `date(timestamp)` (and plan) would make it truly daily and enable trend and plan charts
-- **Quarantine boundary**: The brief rejects `0` and `100` as well; the code rejects only `< 0` and `> 100`
-- **Safe re-runs**: Replace full-table `overwrite` with date-partitioned writes using `replaceWhere`
-- **Alerting**: Add a Databricks Alert on the quarantine count and a failure notification on the Job
-- **Scheduling**: Trigger the Job on a schedule instead of manually
-- **Scale**: At 100,000+ homes, switch to incremental ingestion (for example Auto Loader) rather than full re-reads
 
 ---
 
