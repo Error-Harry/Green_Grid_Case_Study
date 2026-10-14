@@ -1,0 +1,69 @@
+{
+  "datasets": [
+    {
+      "name": "76e846b2",
+      "displayName": "gold_daily_usage",
+      "config": {
+        "version": "1.1",
+        "source": "databricksbootcamp.greeengridcasestudy.gold_daily_usage",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "37816b51",
+      "displayName": "Daily Usage",
+      "layout": [
+        {
+          "widget": {
+            "name": "28a99c4f",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "76e846b2",
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "data": {
+                "queryName": "main_query"
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {}
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
