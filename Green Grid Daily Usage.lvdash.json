@@ -20,39 +20,301 @@
           }
         ]
       }
+    },
+    {
+      "name": "84a0eed1",
+      "displayName": "peak_vs_offpeak",
+      "queryLines": [
+        "   SELECT 'Peak (18:00–21:00)' AS rate_period, SUM(peak_bill) AS billed\n",
+        "   FROM databricksbootcamp.greeengridcasestudy.gold_daily_usage\n",
+        "   UNION ALL\n",
+        "   SELECT 'Off-peak', SUM(offpeak_bill)\n",
+        "   FROM databricksbootcamp.greeengridcasestudy.gold_daily_usage"
+      ]
+    },
+    {
+      "name": "d2764641",
+      "displayName": "top10_meters",
+      "queryLines": [
+        "   SELECT meter_id, total_bill\n",
+        "   FROM databricksbootcamp.greeengridcasestudy.gold_daily_usage\n",
+        "   ORDER BY total_bill DESC\n",
+        "   LIMIT 10"
+      ]
     }
   ],
   "pages": [
     {
       "name": "37816b51",
-      "displayName": "Daily Usage",
+      "displayName": "Overview",
       "layout": [
         {
           "widget": {
-            "name": "28a99c4f",
+            "name": "total-energy-used-kwh",
             "queries": [
               {
                 "name": "main_query",
                 "query": {
                   "datasetName": "76e846b2",
+                  "fields": [
+                    {
+                      "name": "sum(total_kwh)",
+                      "expression": "SUM(`total_kwh`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Total Energy Used (kWh)",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_kwh)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "total-billed",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "76e846b2",
+                  "fields": [
+                    {
+                      "name": "sum(total_bill)",
+                      "expression": "SUM(`total_bill`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Total Billed",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_bill)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "active-meters",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "76e846b2",
+                  "fields": [
+                    {
+                      "name": "countdistinct(meter_id)",
+                      "expression": "COUNT(DISTINCT `meter_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Active Meters",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "countdistinct(meter_id)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "peak-vs-off-peak-billing",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "84a0eed1",
+                  "fields": [
+                    {
+                      "name": "rate_period",
+                      "expression": "`rate_period`"
+                    },
+                    {
+                      "name": "billed",
+                      "expression": "`billed`"
+                    }
+                  ],
                   "disaggregated": true
                 }
               }
             ],
             "spec": {
-              "data": {
-                "queryName": "main_query"
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Peak vs Off-peak Billing",
+                  "fields": []
+                }
               },
               "version": 3,
               "widgetType": "bar",
-              "encodings": {}
+              "encodings": {
+                "x": {
+                  "fieldName": "rate_period",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "billed",
+                  "axis": {
+                    "title": "Billed amount"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "rate_period",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
             }
           },
           "position": {
             "x": 0,
-            "y": 1,
-            "width": 6,
-            "height": 6
+            "y": 2,
+            "width": 12,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "top-10-meters-total-bill",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "d2764641",
+                  "fields": [
+                    {
+                      "name": "meter_id",
+                      "expression": "`meter_id`"
+                    },
+                    {
+                      "name": "total_bill",
+                      "expression": "`total_bill`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Top 10 Meters by Total Bill",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "meter_id",
+                  "axis": {
+                    "title": "Meter"
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "total_bill",
+                  "axis": {
+                    "title": "Total bill"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 9
           }
         }
       ],
